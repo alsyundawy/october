@@ -400,7 +400,7 @@ class CombineAssets
             $this->putCache($cacheKey, $cacheInfo);
         }
 
-        return $this->getCombinedUrl($cacheInfo['version'] . '.' . $extension);
+        return $this->getCombinedUrl($cacheInfo['version']);
     }
 
     /**
@@ -413,7 +413,8 @@ class CombineAssets
     {
         /**
          * @event cms.combiner.beforePrepare
-         * Provides an opportunity to interact with the asset combiner before assets are combined
+         * Provides an opportunity to interact with the asset combiner before assets are combined.
+         * >**NOTE**: Plugin's must be elevated (`$elevated = true` on Plugin.php) to be run on the /combine route and thus listen to this event
          *
          * Example usage:
          *
@@ -428,7 +429,7 @@ class CombineAssets
         $filesSalt = null;
         foreach ($assets as $asset) {
             $filters = $this->getFilters(File::extension($asset)) ?: [];
-            $path = file_exists($asset) ? $asset : File::symbolizePath($asset, null) ?: $this->localPath . $asset;
+            $path = file_exists($asset) ? $asset : (File::symbolizePath($asset, null) ?: $this->localPath . $asset);
             $files[] = new FileAsset($path, $filters, public_path());
             $filesSalt .= $this->localPath . $asset;
         }
@@ -482,7 +483,7 @@ class CombineAssets
         $key = '';
 
         $assetFiles = array_map(function ($file) {
-            return file_exists($file) ? $file : File::symbolizePath($file, null) ?: $this->localPath . $file;
+            return file_exists($file) ? $file : (File::symbolizePath($file, null) ?: $this->localPath . $file);
         }, $assets);
 
         foreach ($assetFiles as $file) {
