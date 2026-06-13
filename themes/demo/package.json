@@ -6,7 +6,7 @@
         "build": "node esbuild.config.js --production"
     },
     "devDependencies": {
-        "esbuild": "^0.24.0",
+        "esbuild": "^0.28.1",
         "sass": "^1.45.0"
     },
     "dependencies": {
